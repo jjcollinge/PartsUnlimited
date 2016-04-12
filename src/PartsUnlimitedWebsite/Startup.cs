@@ -43,6 +43,8 @@ namespace PartsUnlimited
             var sqlConnectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             var useInMemoryDatabase = string.IsNullOrWhiteSpace(sqlConnectionString);
 
+            services.AddSingleton(_ => Configuration);
+
             // Add EF services to the services container
             if (useInMemoryDatabase || runningOnMono)
             {

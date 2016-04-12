@@ -5,6 +5,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
 using PartsUnlimited.Models;
 using System;
 using System.Linq;
@@ -16,10 +17,13 @@ namespace PartsUnlimited.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IConfiguration _config;
+
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration config)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _config = config;
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
@@ -68,6 +72,21 @@ namespace PartsUnlimited.Controllers
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
+        }
+
+        // NOTE - This is a dubious hack to simplify a hackfest. Do NOT use this in a live environment or kittens will be harmed
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> AutoLogin()
+        {
+            // Automatically sign admin user in
+            await SignInManager.PasswordSignInAsync(
+                userName: _config["AdminRole:UserName"],
+                password: _config["AdminRole:Password"],
+                isPersistent: true,
+                lockoutOnFailure: false);
+
+            return RedirectToAction(actionName: "AutoPopulateCart", controllerName: "ShoppingCart");
         }
 
         //

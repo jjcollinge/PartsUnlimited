@@ -165,5 +165,29 @@ namespace PartsUnlimited.Controllers
 
             return Json(results);
         }
+
+        // NOTE - This is a dubious hack to simplify a hackfest. Do NOT use this in a live environment or kittens will be harmed
+        [HttpGet]
+        public async Task<ActionResult> AutoPopulateCart()
+        {
+            // Retrieve the product from the database
+            var productsToAdd = _db.Products
+                .Take(3);
+
+            // Start timer for save process telemetry
+            var startTime = System.DateTime.Now;
+
+            // Add it to the shopping cart
+            var cart = ShoppingCart.GetCart(_db, HttpContext);
+
+            foreach (var product in productsToAdd)
+            {
+                cart.AddToCart(product);
+            }
+
+            await _db.SaveChangesAsync(HttpContext.RequestAborted);
+
+            return RedirectToAction(actionName: "Index", controllerName: "Home");
+        }
     }
 }
