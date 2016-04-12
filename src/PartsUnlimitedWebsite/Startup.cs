@@ -202,7 +202,7 @@ namespace PartsUnlimited
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
+                    defaults: new { controller = "Account", action = "AutoLogin" });
 
                 routes.MapRoute(
                     name: "api",
