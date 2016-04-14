@@ -40,10 +40,8 @@
     "PartsUnlimited.Models": ""
   },
   "commands": {
-    "WebListener": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://0.0.0.0:5001",
-    "Kestrel": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.Kestrel --server.urls http://0.0.0.0:5001",
-    "run": "run server.urls=http://0.0.0.0:5001",
-    "web": "Microsoft.AspNet.Server.Kestrel"
+    "web": "Microsoft.AspNet.Server.Kestrel",
+    "ef": "EntityFramework.Commands"
   },
   "scripts": {
     "postrestore": [ "npm install" ],
@@ -62,7 +60,7 @@
     "**.vspscc"
   ],
   "frameworks": {
-    "dnxcore50": {
-    }
+    "dnx451": { },
+    "dnxcore50": { }
   }
 }

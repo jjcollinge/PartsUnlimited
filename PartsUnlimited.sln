@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22806.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{44621553-AA7D-4893-8834-79582A7D8348}"
 EndProject
@@ -44,7 +44,6 @@ Global
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Debug|x86.Build.0 = Debug|Any CPU
 		{0C64E1A0-7791-457B-BD8A-60CBA4979702}.Release|Any CPU.ActiveCfg = Release|Any CPU
