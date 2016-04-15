@@ -53,13 +53,15 @@ namespace PartsUnlimited.Controllers
 
             try
             {
-                if (string.Equals(formCollection["PromoCode"].FirstOrDefault(), PromoCode,
-                    StringComparison.OrdinalIgnoreCase) == false)
-                {
-                    return View(order);
-                }
-                else
-                {
+                // Hack to accept orders without promo code for hackathon
+
+                //if (string.Equals(formCollection["PromoCode"].FirstOrDefault(), PromoCode,
+                //    StringComparison.OrdinalIgnoreCase) == false)
+                //{
+                //    return View(order);
+                //}
+                //else
+                //{
                     order.Username = HttpContext.User.GetUserName();
                     order.OrderDate = DateTime.Now;
 
@@ -75,7 +77,7 @@ namespace PartsUnlimited.Controllers
 
                     return RedirectToAction("Complete",
                         new { id = order.OrderId });
-                }
+                //}
             }
             catch
             {

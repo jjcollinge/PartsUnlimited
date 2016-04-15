@@ -61,10 +61,17 @@
                     @Html.TextBox("PromoCode", null, new { @class = "form-control", placeholder = "Promo Code" })
                 </div>
 
+                <!--ATTENTION HACKERS (optional):
+                    ------------------------------------------------------
+                    You could add another section here to enable donations
+                    in this form. The data will be POSTed to the controller
+                    /Checkout/AddressAndPayment where you can add the
+                    business logic to notify you donation web service.
+                    -->
+
                 <div class="col-md-12 no-gutter-sm">
                     <input type="submit" value="Submit Order" />
                 </div>
-
         </div>
         </div>
 }

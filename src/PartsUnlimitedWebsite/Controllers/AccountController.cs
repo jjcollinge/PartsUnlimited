@@ -79,14 +79,25 @@ namespace PartsUnlimited.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> AutoLogin()
         {
-            // Automatically sign admin user in
-            await SignInManager.PasswordSignInAsync(
-                userName: _config["AdminRole:UserName"],
-                password: _config["AdminRole:Password"],
-                isPersistent: true,
-                lockoutOnFailure: false);
+            var loggedIn = User.Identity.Name == _config["AdminRole:UserName"] ? true : false;
 
-            return RedirectToAction(actionName: "AutoPopulateCart", controllerName: "ShoppingCart");
+            if (!loggedIn)
+            {
+                // Automatically sign admin user in
+                await SignInManager.PasswordSignInAsync(
+                    userName: _config["AdminRole:UserName"],
+                    password: _config["AdminRole:Password"],
+                    isPersistent: true,
+                    lockoutOnFailure: false);
+
+                // Auto populate the users cart with items
+                return RedirectToAction(actionName: "AutoPopulateCart", controllerName: "ShoppingCart");
+            }
+            else
+            {
+                // Already logged in so redirect to home page
+                return RedirectToAction(actionName: "Index", controllerName: "Home");
+            }
         }
 
         //
