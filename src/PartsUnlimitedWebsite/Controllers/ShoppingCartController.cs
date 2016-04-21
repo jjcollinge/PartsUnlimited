@@ -32,28 +32,13 @@ namespace PartsUnlimited.Controllers
         public IActionResult Index()
         {
             var cart = ShoppingCart.GetCart(_db, HttpContext);
-
-            var items = cart.GetCartItems();
-            var itemsCount = items.Sum(x => x.Count);
-            var subTotal = items.Sum(x => x.Count * x.Product.Price);
-            var shipping = itemsCount * (decimal)5.00;
-            var tax = (subTotal + shipping) * (decimal)0.05;
-            var total = subTotal + shipping + tax;
-
-            var costSummary = new OrderCostSummary
-            {
-                CartSubTotal = subTotal.ToString("C"),
-                CartShipping = shipping.ToString("C"),
-                CartTax = tax.ToString("C"),
-                CartTotal = total.ToString("C")
-            };
-
+            var costSummary = CostSummaryHelper.CalculateCostSummary(cart);
 
             // Set up our ViewModel
             var viewModel = new ShoppingCartViewModel
             {
-                CartItems = items,
-                CartCount = itemsCount,
+                CartItems = cart.GetCartItems(),
+                CartCount = cart.GetCartItems().Count,
                 OrderCostSummary = costSummary
             };
 
@@ -64,6 +49,7 @@ namespace PartsUnlimited.Controllers
             return View(viewModel);
         }
 
+       
         //
         // GET: /ShoppingCart/AddToCart/5
 
@@ -143,23 +129,18 @@ namespace PartsUnlimited.Controllers
             _telemetry.TrackEvent("Cart/Server/Remove", null, measurements);
 
             // Display the confirmation message
-            var items = cart.GetCartItems();
-            var itemsCount = items.Sum(x => x.Count);
-            var subTotal = items.Sum(x => x.Count * x.Product.Price);
-            var shipping = itemsCount * (decimal)5.00;
-            var tax = (subTotal + shipping) * (decimal)0.05;
-            var total = subTotal + shipping + tax;
+            var costSummary = CostSummaryHelper.CalculateCostSummary(cart);
 
             var results = new ShoppingCartRemoveViewModel
             {
                 Message = removed + productName +
                     " has been removed from your shopping cart.",
-                CartSubTotal = subTotal.ToString("C"),
-                CartShipping = shipping.ToString("C"),
-                CartTax = tax.ToString("C"),
-                CartTotal = total.ToString("C"),
-                CartCount = itemsCount,
-                ItemCount = itemCount,
+                CartSubTotal = costSummary.CartSubTotal.ToString("C"),
+                CartShipping = costSummary.CartShipping.ToString("C"),
+                CartTax = costSummary.CartTax.ToString("C"),
+                CartTotal = costSummary.CartSubTotal.ToString("C"),
+                CartCount = cart.GetCount(),
+                ItemCount = cart.GetCount(),
                 DeleteId = id
             };
 

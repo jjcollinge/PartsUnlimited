@@ -5,9 +5,9 @@ namespace PartsUnlimited.ViewModels
 {
     public class OrderCostSummary
     {
-        public string CartSubTotal { get; set; }
-        public string CartShipping { get; set; }
-        public string CartTax { get; set; }
-        public string CartTotal { get; set; }
+        public decimal CartSubTotal { get; set; }
+        public decimal CartShipping { get; set; }
+        public decimal CartTax { get; set; }
+        public decimal CartTotal { get; set; }
     }
 }

@@ -38,11 +38,15 @@ namespace PartsUnlimited.Controllers
             var id = User.GetUserId();
             var user = await _db.Users.FirstOrDefaultAsync(o => o.Id == id);
 
+            var cart = ShoppingCart.GetCart(_db, HttpContext);
+            var costSummary = CostSummaryHelper.CalculateCostSummary(cart);
+
             var order = new Order
             {
                 Name = user.Name,
                 Email = user.Email,
-                Username = user.UserName
+                Username = user.UserName,
+                Total = costSummary.CartTotal
             };
 
             return View(order);
@@ -79,6 +83,10 @@ namespace PartsUnlimited.Controllers
                 var cart = ShoppingCart.GetCart(_db, HttpContext);
                 cart.CreateOrder(order);
 
+                //Handle donations
+                if (order.Donated)
+                    HandleDonation(order);
+
                 // Save all changes
                 await _db.SaveChangesAsync(HttpContext.RequestAborted);
 
@@ -92,6 +100,54 @@ namespace PartsUnlimited.Controllers
                 return View(order);
             }
         }
+
+        private static async void HandleDonation(Order order)
+        {
+            // Donation field is populated
+            try
+            {
+                var donationAmount = Math.Ceiling(order.Total) - order.Total;
+
+                // Validate range
+                if (donationAmount > 0.0M && donationAmount < 10000.0M)
+                {
+                    var retailer = "PartsUnlimited";
+                    var donation = new
+                    {
+                        sourceRetailer = retailer,
+                        customerId = order.Email,
+                        orderId = $"{retailer}_{order.OrderId}",
+                        currency = order.Total.ToString("C"),
+                        dateTime = DateTime.Now
+                    };
+
+                    var baseUrl = "http://*";
+                    var endpoint = "api/donation";
+
+                    // Send donation notification to external web api
+                    using (var client = new HttpClient())
+                    {
+                        client.BaseAddress = new Uri(baseUrl);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        var response = await client.PostAsync($"{baseUrl}/{endpoint}",
+                            new StringContent(
+                                JsonConvert.SerializeObject(donation)));
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Do something with the response
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Swallow any invalid field inputs
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         //
         // GET: /Checkout/Complete

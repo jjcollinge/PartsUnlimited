@@ -55,6 +55,9 @@ namespace PartsUnlimited.Models
         public string Phone { get; set; }
 
         [Required]
+        public bool Donated { get; set; }
+
+        [Required]
         [Display(Name = "Email Address")]
         [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}",
             ErrorMessage = "Email is is not valid.")]

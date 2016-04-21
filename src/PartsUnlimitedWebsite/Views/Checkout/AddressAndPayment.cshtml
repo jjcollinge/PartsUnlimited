@@ -51,6 +51,18 @@
             </div>
             <div class="col-sm-12 col-md-6 wide-col-padding no-gutter-xs">
                 <div class="col-xs-12  no-gutter-sm">
+                    <h4>Round My Bill</h4>
+                </div>
+                <div class="col-md-12 no-gutter-sm">
+                    <p>Would you like to donate @{
+                        var amountToDonate = (Math.Ceiling(Model.Total) - Model.Total).ToString("C");
+                        } @amountToDonate of your order to charity
+                    </p>
+                    Donate: @Html.CheckBoxFor(m => m.Donated, true)
+                </div>
+                <div class="form-group col-sm-8 col-md-10 no-gutter-sm">
+                </div>
+                <div class="col-xs-12  no-gutter-sm">
                     <h4>Payment</h4>
                 </div>
                 <div class="col-md-12 no-gutter-sm" >
