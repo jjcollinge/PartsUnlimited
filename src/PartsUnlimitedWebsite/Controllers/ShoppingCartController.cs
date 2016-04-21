@@ -33,7 +33,7 @@ namespace PartsUnlimited.Controllers
         {
             var cart = ShoppingCart.GetCart(_db, HttpContext);
             var costSummary = CostSummaryHelper.CalculateCostSummary(cart);
-
+  
             // Set up our ViewModel
             var viewModel = new ShoppingCartViewModel
             {

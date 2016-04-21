@@ -44,10 +44,10 @@
                                     $('#item-count-' + data.DeleteId).text(data.ItemCount);
                                 }
                             }
-                            $('#cart-sub-total').text(data.CartSubTotal);
-                            $('#cart-shipping').text(data.CartShipping);
-                            $('#cart-tax').text(data.CartTax);
-                            $('#cart-total').text(data.CartTotal);
+                            $('#cart-sub-total').text(data.CartSubTotal.toLocaleString());
+                            $('#cart-shipping').text(data.CartShipping.toLocaleString());
+                            $('#cart-tax').text(data.CartTax.toLocaleString());
+                            $('#cart-total').text(data.CartTotal.toLocaleString());
                             $('#update-message').text(data.Message);
                             $('#cart-status').text('Cart (' + data.CartCount + ')');
                             $('#cart-count').text(data.CartCount);

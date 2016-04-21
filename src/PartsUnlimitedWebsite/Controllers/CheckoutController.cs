@@ -119,10 +119,13 @@ namespace PartsUnlimited.Controllers
                     var retailer = "PartsUnlimited";
                     var donation = new
                     {
-                        sourceRetailer = retailer,
+                        sourceRetailerId = retailer,
                         customerId = order.Email,
                         orderId = $"{retailer}_{order.OrderId}",
-                        currency = order.Total.ToString("C"),
+                        amount = donationAmount,
+                        transactionId = Guid.NewGuid(),
+                        processingStatus = "success",
+                        currency = "GBP",   // Add to model
                         dateTime = DateTime.Now
                     };
 
