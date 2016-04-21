@@ -51,16 +51,6 @@
             </div>
             <div class="col-sm-12 col-md-6 wide-col-padding no-gutter-xs">
                 <div class="col-xs-12  no-gutter-sm">
-                    <h4>Donation</h4>
-                </div>
-                <div class="col-md-12 no-gutter-sm">
-                    <p>Check this box to donate charity</p>
-                </div>
-                <div class="form-group col-sm-8 col-md-10 no-gutter-sm">
-                    @Html.TextBox("DonationAmount", null, new { @class = "form-control", placeholder = "Donation Amount" })
-                </div>
-
-                <div class="col-xs-12  no-gutter-sm">
                     <h4>Payment</h4>
                 </div>
                 <div class="col-md-12 no-gutter-sm" >
@@ -70,15 +60,6 @@
                 <div class="form-group col-sm-8 col-md-10 no-gutter-sm">
                     @Html.TextBox("PromoCode", null, new { @class = "form-control", placeholder = "Promo Code" })
                 </div>
-
-                <!--ATTENTION HACKERS (optional):
-                    ------------------------------------------------------
-                    You could add another section here to enable donations
-                    in this form. The data will be POSTed to the controller
-                    /Checkout/AddressAndPayment where you can add the
-                    business logic to notify you donation web service.
-                    -->
-
                 <div class="col-md-12 no-gutter-sm">
                     <input type="submit" value="Submit Order" />
                 </div>

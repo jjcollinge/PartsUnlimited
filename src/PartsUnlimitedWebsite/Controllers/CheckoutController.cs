@@ -72,8 +72,6 @@ namespace PartsUnlimited.Controllers
                 order.Username = HttpContext.User.GetUserName();
                 order.OrderDate = DateTime.Now;
 
-                HandleDonation(formCollection, order);
-
                 //Add the Order
                 _db.Orders.Add(order);
 
@@ -92,60 +90,6 @@ namespace PartsUnlimited.Controllers
             {
                 //Invalid - redisplay with errors
                 return View(order);
-            }
-        }
-
-        private static async void HandleDonation(Microsoft.AspNet.Http.IFormCollection formCollection, Order order)
-        {
-            string donationAmountStr = "DonationAmount";
-            var donationFieldStr = formCollection["DonationAmount"].FirstOrDefault();
-            if (string.Equals(donationFieldStr, donationAmountStr,
-                StringComparison.OrdinalIgnoreCase) != false || !String.IsNullOrEmpty(donationFieldStr))
-            {
-                // Donation field is populated
-                try
-                {
-                    // Validate type
-                    float donationAmount = float.Parse(donationFieldStr);
-
-                    // Validate range
-                    if (donationAmount > 0.0f && donationAmount < 10000.0f)
-                    {
-                        var retailer = "PartsUnlimited";
-                        var donation = new
-                        {
-                            sourceRetailer = retailer,
-                            customerId = "bobtaylor@hotmail.com",
-                            orderId = $"{retailer}_{order.OrderId}",
-                            currency = "GBP",
-                            dateTime = DateTime.Now
-                        };
-
-                        var baseUrl = "http://*";
-                        var endpoint = "api/donation";
-
-                        // Send donation notification to external web api
-                        using (var client = new HttpClient())
-                        {
-                            client.BaseAddress = new Uri(baseUrl);
-                            client.DefaultRequestHeaders.Accept.Clear();
-                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                            var response = await client.PostAsync($"{baseUrl}/{endpoint}", 
-                                new StringContent(
-                                    JsonConvert.SerializeObject(donation)));
-                            if (response.IsSuccessStatusCode)
-                            {
-                                // Do something with the response
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Swallow any invalid field inputs
-                    Console.WriteLine(ex.Message);
-                }
             }
         }
 
