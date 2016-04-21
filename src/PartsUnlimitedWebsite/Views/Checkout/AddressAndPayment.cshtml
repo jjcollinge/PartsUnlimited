@@ -51,6 +51,16 @@
             </div>
             <div class="col-sm-12 col-md-6 wide-col-padding no-gutter-xs">
                 <div class="col-xs-12  no-gutter-sm">
+                    <h4>Donation</h4>
+                </div>
+                <div class="col-md-12 no-gutter-sm">
+                    <p>Check this box to donate charity</p>
+                </div>
+                <div class="form-group col-sm-8 col-md-10 no-gutter-sm">
+                    @Html.TextBox("DonationAmount", null, new { @class = "form-control", placeholder = "Donation Amount" })
+                </div>
+
+                <div class="col-xs-12  no-gutter-sm">
                     <h4>Payment</h4>
                 </div>
                 <div class="col-md-12 no-gutter-sm" >

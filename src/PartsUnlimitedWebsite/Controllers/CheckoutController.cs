@@ -4,10 +4,16 @@
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
+using Newtonsoft.Json;
 using PartsUnlimited.Models;
 using System;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace PartsUnlimited.Controllers
@@ -62,27 +68,84 @@ namespace PartsUnlimited.Controllers
                 //}
                 //else
                 //{
-                    order.Username = HttpContext.User.GetUserName();
-                    order.OrderDate = DateTime.Now;
 
-                    //Add the Order
-                    _db.Orders.Add(order);
+                order.Username = HttpContext.User.GetUserName();
+                order.OrderDate = DateTime.Now;
 
-                    //Process the order
-                    var cart = ShoppingCart.GetCart(_db, HttpContext);
-                    cart.CreateOrder(order);
+                HandleDonation(formCollection, order);
 
-                    // Save all changes
-                    await _db.SaveChangesAsync(HttpContext.RequestAborted);
+                //Add the Order
+                _db.Orders.Add(order);
 
-                    return RedirectToAction("Complete",
-                        new { id = order.OrderId });
+                //Process the order
+                var cart = ShoppingCart.GetCart(_db, HttpContext);
+                cart.CreateOrder(order);
+
+                // Save all changes
+                await _db.SaveChangesAsync(HttpContext.RequestAborted);
+
+                return RedirectToAction("Complete",
+                    new { id = order.OrderId });
                 //}
             }
             catch
             {
                 //Invalid - redisplay with errors
                 return View(order);
+            }
+        }
+
+        private static async void HandleDonation(Microsoft.AspNet.Http.IFormCollection formCollection, Order order)
+        {
+            string donationAmountStr = "DonationAmount";
+            var donationFieldStr = formCollection["DonationAmount"].FirstOrDefault();
+            if (string.Equals(donationFieldStr, donationAmountStr,
+                StringComparison.OrdinalIgnoreCase) != false || !String.IsNullOrEmpty(donationFieldStr))
+            {
+                // Donation field is populated
+                try
+                {
+                    // Validate type
+                    float donationAmount = float.Parse(donationFieldStr);
+
+                    // Validate range
+                    if (donationAmount > 0.0f && donationAmount < 10000.0f)
+                    {
+                        var retailer = "PartsUnlimited";
+                        var donation = new
+                        {
+                            sourceRetailer = retailer,
+                            customerId = "bobtaylor@hotmail.com",
+                            orderId = $"{retailer}_{order.OrderId}",
+                            currency = "GBP",
+                            dateTime = DateTime.Now
+                        };
+
+                        var baseUrl = "http://*";
+                        var endpoint = "api/donation";
+
+                        // Send donation notification to external web api
+                        using (var client = new HttpClient())
+                        {
+                            client.BaseAddress = new Uri(baseUrl);
+                            client.DefaultRequestHeaders.Accept.Clear();
+                            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                            var response = await client.PostAsync($"{baseUrl}/{endpoint}", 
+                                new StringContent(
+                                    JsonConvert.SerializeObject(donation)));
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Do something with the response
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Swallow any invalid field inputs
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 
