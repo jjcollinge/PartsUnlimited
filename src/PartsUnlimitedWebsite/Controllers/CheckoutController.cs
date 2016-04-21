@@ -22,6 +22,8 @@ namespace PartsUnlimited.Controllers
     public class CheckoutController : Controller
     {
         private readonly IPartsUnlimitedContext _db;
+        private const decimal MAX_DONATION = 10000.0M;
+        private const decimal MIN_DONATION = 0.1M;
 
         public CheckoutController(IPartsUnlimitedContext context)
         {
@@ -103,14 +105,17 @@ namespace PartsUnlimited.Controllers
 
         private static async void HandleDonation(Order order)
         {
-            // Donation field is populated
             try
             {
+                //TODO: Fix rounding errors by increasing precision to 3 dp
                 var donationAmount = Math.Ceiling(order.Total) - order.Total;
 
                 // Validate range
-                if (donationAmount > 0.0M && donationAmount < 10000.0M)
+                if (donationAmount < MAX_DONATION)
                 {
+                    if (donationAmount < MIN_DONATION)
+                        donationAmount = MIN_DONATION;
+
                     var retailer = "PartsUnlimited";
                     var donation = new
                     {
@@ -121,6 +126,7 @@ namespace PartsUnlimited.Controllers
                         dateTime = DateTime.Now
                     };
 
+                    // Move to config
                     var baseUrl = "http://*";
                     var endpoint = "api/donation";
 
